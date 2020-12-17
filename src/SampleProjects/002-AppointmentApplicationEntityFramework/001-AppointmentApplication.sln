@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentApplicationRepository", "AppointmentApplicationRepository\AppointmentApplicationRepository.csproj", "{A9BFAA1E-C964-4702-8A66-3AB5A1C8513F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentApplicationDesktop", "AppointmentApplicationDesktop\AppointmentApplicationDesktop.csproj", "{9D8195C5-3A38-4854-8581-4ABBE438B03B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9BFAA1E-C964-4702-8A66-3AB5A1C8513F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9BFAA1E-C964-4702-8A66-3AB5A1C8513F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9BFAA1E-C964-4702-8A66-3AB5A1C8513F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9BFAA1E-C964-4702-8A66-3AB5A1C8513F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D8195C5-3A38-4854-8581-4ABBE438B03B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D8195C5-3A38-4854-8581-4ABBE438B03B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D8195C5-3A38-4854-8581-4ABBE438B03B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D8195C5-3A38-4854-8581-4ABBE438B03B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12B78B14-2B30-4778-B117-A1912C4EDAB9}
+	EndGlobalSection
+EndGlobal

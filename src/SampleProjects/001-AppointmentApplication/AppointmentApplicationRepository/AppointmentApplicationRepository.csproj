@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>CSD.AppointmentApplication</AssemblyName>
+    <RootNamespace>CSD.AppointmentApplication</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>    
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+</Project>
