@@ -1,135 +1,52 @@
 ﻿/*----------------------------------------------------------------------------------------------------------------------	
-	Sınıf Çalıması: Aşağıda açıklanan tabloları yaratınız:
-	- customers
-		- id
-		- citizen_id
-		- name
-		- surname
-		- address
-	- phones
-		- id
-		- customer_id
-		- number
-	- phone_invoices
-		- id
-		- phone_id
-		- invoice_date
-		- paid_date
-		- total
-	Bu tablolara göre:
-	- Fatura ödeme merkezinin faturaya ilişkin bilgileri ile müşteri bilgilerinin elde edildiği bir view yazınız.
-	Fatura ödenmişse bilgi elde edilemeyecektir
+	Sınıf Çalışması: Aşağıda belirtilen students isimli tabloyu oluşturunuz
+	- student_id	- int
+	- name			- nvarchar(30)
+	- surname		- nvarchar(30)
+	- phone			- char(14)
 
-	- Fatura ödenmemişse merkezinin ödeme tamamlandığında view içerisinde update edebileceği bir procedure yazınız
+	Bu tabloya göre oluşan error'lara ilişkin source number, message, severity number, line ve oluşma tarih-zaman bilgilerini
+	students_errors isimli bir tabloya kaydeden sp_insert_student isimli stored procedure'ü yazınız
 ----------------------------------------------------------------------------------------------------------------------*/
+go
 
-create database phoneinvoicesdb
+create table students (
+	student_id	int primary key identity(1, 1),
+	name nvarchar(30) not null,
+	surname nvarchar(30) not null,
+	phone char(14)
+)
+
 
 go
 
-use phoneinvoicesdb
-
+create table students_errors (
+	error_id int primary key identity(1, 1),
+	source nvarchar(max) not null,
+	number int not null,
+	message nvarchar(max) not null,
+	severity int not null,
+	line int not null,
+	datetime datetime default(sysdatetime()) not null
+)
 
 go
 
-create function fn_hide_text(@text nvarchar(max), @ch char(1))
-returns nvarchar(max)
+create procedure sp_insert_student(@name nvarchar(50), @surname nvarchar(50), @phone char(50))
 as
 begin
-	declare @length int = LEN(@text)
-	return LEFT(@text, 1) + REPLICATE(@ch, @length - 2) + RIGHT(@text, 1)
+	begin try
+		insert into students (name, surname, phone) values (@name, upper(@surname), @phone)
+	end try
+	begin catch
+		insert into students_errors (source, number, severity, message, line) 
+		values (error_procedure(), error_number(), error_severity(), error_message(), error_line())
+	end catch
 end
 
-go
-
-
-create table customers(
-	customer_id int primary key identity(1, 1),
-	citizen_id char(11) check(len(citizen_id)=11) unique not null,
-	name nvarchar(100),
-	surname nvarchar(100),
-	address nvarchar(max)
-)
 
 go
 
-create table phones(
-	phone_id int primary key identity(1, 1),
-	customer_id int foreign key references customers(customer_id),
-	number char(14) not null
-)
+exec sp_insert_student 'Oğuz', 'Karan', '00905325158012'
 
-go
-
-create table phone_invoices (
-	phone_invoice_id int primary key identity(1, 1),
-	phone_id int foreign key references phones(phone_id) not null,
-	invoice_date date not null,
-	paid_date date,
-	total money not null
-)
-
-go
-
-/*
-	Fatura ödeme merkezinin faturaya ilişkin bilgileri ile müşteri bilgilerinin elde edildiği bir view yazınız.
-	Fatura ödenmişse bilgi elde edilemeyecektir
-*/
-
-create view not_paid_invoices
-as
-select pi.phone_invoice_id, p.number, 
-dbo.fn_hide_text(c.name, '*') + ' ' + dbo.fn_hide_text(c.surname, '*') as fullname,
-pi.total,
-pi.paid_date
-from
-phone_invoices pi inner join phones p on p.phone_id=pi.phone_id
-inner join customers c on c.customer_id=p.customer_id
-where paid_date is null
-
-
-go
-
-create view paid_invoices
-as
-select p.number, 
-dbo.fn_hide_text(c.name, '*') + ' ' + dbo.fn_hide_text(c.surname, '*') as fullname,
-pi.total,
-pi.paid_date
-from
-phone_invoices pi inner join phones p on p.phone_id=pi.phone_id
-inner join customers c on c.customer_id=p.customer_id
-where paid_date is not null
-
-go
-
-/*Fatura ödenmemişse merkezinin ödeme tamamlandığında view içerisinde update edebileceği bir procedure yazınız*/
-
-create procedure sp_pay_invoice(@phone_invoice_id int)
-as
-begin
-	declare @now date = getdate()
-
-	update not_paid_invoices set paid_date = @now where paid_date is null and phone_invoice_id = @phone_invoice_id
-end
-
-go
-
-create function fn_get_not_paid_invoices_by_number(@number char(14))
-returns table
-as
-return (
-	select 
-	dbo.fn_hide_text(c.name, '*') + ' ' + dbo.fn_hide_text(c.surname, '*') as fullname,
-	pi.invoice_date,
-	pi.total
-	from phone_invoices pi inner join phones p on pi.phone_id = p.phone_id
-	inner join customers c on c.customer_id = p.customer_id
-	where p.number like @number and pi.paid_date is null
-)
-
-go
-
-exec sp_pay_invoice 3
-
-select * from dbo.fn_get_not_paid_invoices_by_number('00905325678998')
+select * from students_errors
