@@ -1,52 +1,56 @@
 ﻿/*----------------------------------------------------------------------------------------------------------------------	
-	Sınıf Çalışması: Aşağıda belirtilen students isimli tabloyu oluşturunuz
-	- student_id	- int
-	- name			- nvarchar(30)
-	- surname		- nvarchar(30)
-	- phone			- char(14)
+	Sınıf Çalışması: Aşağıdaki veritabanını oluşturunuz:
+	patients
+		- patient_id
+		- name
+		- address
+		- city_id
+		- birth_date
+	companions
+		- companion_id
+		- name
+		- patient_id
+		- relation_id
+	cities
+		- city_id
+		- name
+	relations
+		- relation_id
+		- text
+		- description
 
-	Bu tabloya göre oluşan error'lara ilişkin source number, message, severity number, line ve oluşma tarih-zaman bilgilerini
-	students_errors isimli bir tabloya kaydeden sp_insert_student isimli stored procedure'ü yazınız
+	relations tablosu hasta yakının hasta ile yakınlık derecesine ilişkin bilgileri tutmaktadır. 
+
+	Buna göre:
+	1. Tüm patient_id'lere ilişkin hastaların isimlerini  büyük harfe çeviren procedure'ü yazınız
+	2. İl id'ine göre hastaların referakatçi isimlerini küçük harfe çeviren procedure'ü yazınız
+	3. Belirli bir yaştan büyük olan hastaların refakatçi ve kendi isimlerini büyük harfe çeviren procedure'ü
+	yazınız
 ----------------------------------------------------------------------------------------------------------------------*/
-go
-
-create table students (
-	student_id	int primary key identity(1, 1),
-	name nvarchar(30) not null,
-	surname nvarchar(30) not null,
-	phone char(14)
-)
-
 
 go
-
-create table students_errors (
-	error_id int primary key identity(1, 1),
-	source nvarchar(max) not null,
-	number int not null,
-	message nvarchar(max) not null,
-	severity int not null,
-	line int not null,
-	datetime datetime default(sysdatetime()) not null
-)
-
-go
-
-create procedure sp_insert_student(@name nvarchar(50), @surname nvarchar(50), @phone char(50))
+create procedure sp_select_value(@val int)
 as
 begin
 	begin try
-		insert into students (name, surname, phone) values (@name, upper(@surname), @phone)
+		if @val < 0
+			raiserror('sp_select_value:error', 12, 1)
+
+		select @val
 	end try
 	begin catch
-		insert into students_errors (source, number, severity, message, line) 
-		values (error_procedure(), error_number(), error_severity(), error_message(), error_line())
+		select 'sp_select_value:catch';
+		throw
 	end catch
 end
 
-
 go
 
-exec sp_insert_student 'Oğuz', 'Karan', '00905325158012'
-
-select * from students_errors
+begin try
+	declare @val int = rand() * 20 - 10	
+	exec sp_select_value @val
+	select @val
+end try
+begin catch
+	select ERROR_MESSAGE(), ERROR_NUMBER(), ERROR_SEVERITY()
+end catch
