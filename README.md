@@ -1,4 +1,6 @@
 # DBProgramming-Jun-2020
+KAYNAK GÖSTERMEK KOŞULUYLA HER TÜRLÜ ALINTI YAPILABİLİR
+
 #postgresql
 #oracle
 #sqlserver
