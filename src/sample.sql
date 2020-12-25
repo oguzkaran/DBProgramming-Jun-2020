@@ -15,42 +15,66 @@
 		- city_id
 		- name
 	relations
-		- relation_id
-		- text
+		- relation_id		
 		- description
 
 	relations tablosu hasta yakının hasta ile yakınlık derecesine ilişkin bilgileri tutmaktadır. 
 
-	Buna göre:
+	Buna göre aşağıdaki procedure'leri cursır ile yapınız:
 	1. Tüm patient_id'lere ilişkin hastaların isimlerini  büyük harfe çeviren procedure'ü yazınız
 	2. İl id'ine göre hastaların referakatçi isimlerini küçük harfe çeviren procedure'ü yazınız
 	3. Belirli bir yaştan büyük olan hastaların refakatçi ve kendi isimlerini büyük harfe çeviren procedure'ü
 	yazınız
 ----------------------------------------------------------------------------------------------------------------------*/
 
-go
-create procedure sp_select_value(@val int)
-as
-begin
-	begin try
-		if @val < 0
-			raiserror('sp_select_value:error', 12, 1)
-
-		select @val
-	end try
-	begin catch
-		select 'sp_select_value:catch';
-		throw
-	end catch
-end
+create database patientsdb
 
 go
 
-begin try
-	declare @val int = rand() * 20 - 10	
-	exec sp_select_value @val
-	select @val
-end try
-begin catch
-	select ERROR_MESSAGE(), ERROR_NUMBER(), ERROR_SEVERITY()
-end catch
+use patientsdb
+
+go
+
+go
+
+create table cities(
+	city_id int primary key identity(1, 1),
+	name nvarchar(30) not null
+)
+
+go
+
+go
+
+create table relations(
+	relation_id int primary key identity(1, 1),
+	description nvarchar(50) not null,	
+)
+
+go
+
+insert into relations(description)values('Annesi'),( 'Babasi'),('Cocugu'),('Kizi'),('Oglu'),('Teyzesi'),( 'Halasi'),('Amcasi'),('Dayisi'),('Yegeni'),('Kuzeni')
+
+
+go
+
+create table patients(
+	patient_id int primary key identity(1, 1),
+	name nvarchar(200) not null,
+	address nvarchar(max),
+	city_id int foreign key references cities(city_id),
+	birth_date date not null
+)
+
+go
+
+go
+create table companions(
+	companion_id int primary key identity(1, 1),
+	name nvarchar(200) not null,
+	patient_id int foreign key references patients(patient_id),
+	relation_id int foreign key references relations(relation_id),
+)
+
+go
+
