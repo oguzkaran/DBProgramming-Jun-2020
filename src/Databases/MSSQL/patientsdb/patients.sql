@@ -1,3 +1,4 @@
+SET IDENTITY_INSERT patients ON
 insert into patients (patient_id, name, address, city_id, birth_date) values (1, 'Rutger Gilfoyle', '80 Bellgrove Junction', 1, '9/15/1972');
 insert into patients (patient_id, name, address, city_id, birth_date) values (2, 'Wallis Farran', '02 Vera Avenue', 2, '6/28/1998');
 insert into patients (patient_id, name, address, city_id, birth_date) values (3, 'Mellie Toll', '26 New Castle Avenue', 3, '4/3/1966');

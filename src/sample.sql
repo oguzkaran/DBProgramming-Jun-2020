@@ -1,80 +1,44 @@
 ﻿/*----------------------------------------------------------------------------------------------------------------------	
-	Sınıf Çalışması: Aşağıdaki veritabanını oluşturunuz:
-	patients
-		- patient_id
-		- name
-		- address
-		- city_id
-		- birth_date
-	companions
-		- companion_id
-		- name
-		- patient_id
-		- relation_id
-	cities
-		- city_id
-		- name
-	relations
-		- relation_id		
+	Sınıf Çalışması: Basit bir çoktan seçmeli sınava ilişkin aşağıdaki veri tabanını oluşturunuz. Tüm soruların
+	değişken sayıda seçenekleri olacaktır. 
+
+	questions:
+		- question_id
+		- description
+		- level_id
+		- answer_index
+	options:
+		- option_id
+		- description
+		- question_id
+	levels:
+		- level_id
 		- description
 
-	relations tablosu hasta yakının hasta ile yakınlık derecesine ilişkin bilgileri tutmaktadır. 
-
-	Buna göre aşağıdaki procedure'leri cursır ile yapınız:
-	1. Tüm patient_id'lere ilişkin hastaların isimlerini  büyük harfe çeviren procedure'ü yazınız
-	2. İl id'ine göre hastaların referakatçi isimlerini küçük harfe çeviren procedure'ü yazınız
-	3. Belirli bir yaştan büyük olan hastaların refakatçi ve kendi isimlerini büyük harfe çeviren procedure'ü
-	yazınız
+	Buna göre:
+	1. Her çağrıldığında herhangi bir seviyeden rasgele bir soru getiren sorgu
+	2. Parametresi ile aldığı level_id bilgisine göre rasgele bir soru getiren sorgu
 ----------------------------------------------------------------------------------------------------------------------*/
 
-create database patientsdb
+declare @max int = (select COUNT(*) from people) + 1
+declare @min int = 1 
+declare @index int = RAND() * (@max -@min) + @min --[min, max)
 
-go
+declare crs_people cursor scroll for select citizen_id from people
+open crs_people -- cursor açılıyor
 
-use patientsdb
+declare @citizen_id char(11)
 
-go
+fetch absolute @index from crs_people into @citizen_id 
 
-go
+if @@FETCH_STATUS = 0
+	select * from people where citizen_id=@citizen_id
 
-create table cities(
-	city_id int primary key identity(1, 1),
-	name nvarchar(30) not null
-)
+close crs_people
 
-go
-
-go
-
-create table relations(
-	relation_id int primary key identity(1, 1),
-	description nvarchar(50) not null,	
-)
-
-go
-
-insert into relations(description)values('Annesi'),( 'Babasi'),('Cocugu'),('Kizi'),('Oglu'),('Teyzesi'),( 'Halasi'),('Amcasi'),('Dayisi'),('Yegeni'),('Kuzeni')
+deallocate crs_people
 
 
-go
 
-create table patients(
-	patient_id int primary key identity(1, 1),
-	name nvarchar(200) not null,
-	address nvarchar(max),
-	city_id int foreign key references cities(city_id),
-	birth_date date not null
-)
 
-go
-
-go
-create table companions(
-	companion_id int primary key identity(1, 1),
-	name nvarchar(200) not null,
-	patient_id int foreign key references patients(patient_id),
-	relation_id int foreign key references relations(relation_id),
-)
-
-go
 
