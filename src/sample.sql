@@ -1,5 +1,9 @@
-﻿declare @students xml
+﻿/*----------------------------------------------------------------------------------------------------------------------
+	sp_databases stored procedure ile ilgili server içerisindeki tüm veritabanlarına ilişkin bazı bilgiler 
+	listelenebilir
+----------------------------------------------------------------------------------------------------------------------*/
+use testdb
 
-set @students = (select * from students for xml auto)
+go
 
-select  @students
+exec sp_databases
