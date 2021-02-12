@@ -1,9 +1,10 @@
 ﻿/*----------------------------------------------------------------------------------------------------------------------
-	sp_databases stored procedure ile ilgili server içerisindeki tüm veritabanlarına ilişkin bazı bilgiler 
-	listelenebilir
+	Bir login'in şifresi aşağıdaki gibi alter login cümlesi ile değiştirilebilir
 ----------------------------------------------------------------------------------------------------------------------*/
-use testdb
+create login turgut with password='1234'
 
-go
+alter login turgut with password='34567'
 
-exec sp_databases
+alter server role diskadmin add member turgut
+alter server role sysadmin add member turgut
+
