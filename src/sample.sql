@@ -1,10 +1,18 @@
-﻿/*----------------------------------------------------------------------------------------------------------------------
-	Bir login'in şifresi aşağıdaki gibi alter login cümlesi ile değiştirilebilir
+﻿/*----------------------------------------------------------------------------------------------------------------------	
+	grant/revoke komutları view'lar için de kullanılabilir
 ----------------------------------------------------------------------------------------------------------------------*/
-create login turgut with password='1234'
 
-alter login turgut with password='34567'
+go
+create view allpeople 
+as
+select * from people
 
-alter server role diskadmin add member turgut
-alter server role sysadmin add member turgut
+go
 
+create login sema with password='1234', default_database=peopledb
+
+use peopledb
+
+create user sema
+
+grant select on allpeople to sema
